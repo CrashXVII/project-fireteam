@@ -1,8 +1,36 @@
-/* eslint-disable react/prefer-stateless-function */
+
 import React, { Component } from 'react';
 
 
-class App extends Component {
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      url: 'https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/All/CrashXVII/',
+    };
+  }
+
+  async componentDidMount() {
+    this.getData();
+  }
+
+  getData = async () => {
+    try {
+      const { data, url } = this.state;
+      const response = await fetch(url, {
+        method: 'get',
+        headers: {
+          'X-API-Key': '5d7089e50cbe489d8e4da672a35a3bd1',
+        },
+      });
+      const json = await response.json();
+      this.setState({ data: json }, console.log(data));
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -20,5 +48,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
