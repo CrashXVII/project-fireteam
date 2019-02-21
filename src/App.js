@@ -19,13 +19,15 @@ export default class App extends Component {
     try {
       const { data, url } = this.state;
       const response = await fetch(url, {
-        method: 'get',
+        method: 'GET',
         headers: {
           'X-API-Key': '5d7089e50cbe489d8e4da672a35a3bd1',
         },
       });
       const json = await response.json();
-      this.setState({ data: json }, console.log(data));
+      const results = await json.Response;
+      console.log(results);
+      this.setState({ data: results }, console.log(data));
     } catch (e) {
       throw new Error(e);
     }
