@@ -1,4 +1,17 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+import Profiles from './Profiles';
+
+const Button = styled.button`
+  border-radius: 5px;
+  background: rgb(70, 101, 184);
+  color: white;
+  width: 120px;
+  height: 35px;
+  :hover {
+    border: solid 2px rgb(95, 207, 235);
+  }
+`;
 
 export default class App extends Component {
   constructor(props) {
@@ -8,8 +21,6 @@ export default class App extends Component {
       historicalStats: {},
       profile: {},
       charSearch: '',
-      url:
-        'https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/1/CrashXVII/',
       baseUrl: 'https://www.bungie.net/Platform/Destiny2/',
     };
   }
@@ -31,9 +42,10 @@ export default class App extends Component {
     }
   };
 
-  getProfile = async () => {
+  getProfile = async (e) => {
+    e.preventDefault();
     const { charSearch } = this.state;
-    const profile = await this.apiCall(`SearchDestinyPlayer/1/${charSearch}/`);
+    const profile = await this.apiCall(`SearchDestinyPlayer/all/${charSearch}/`);
     this.setState({
       profile,
     });
@@ -62,23 +74,31 @@ export default class App extends Component {
   }
 
   render() {
-    const { charSearch } = this.state;
+    const { charSearch, profile } = this.state;
     return (
       <div>
-        <label htmlFor="search">Profile Name:</label>
-        <input id="search" type="text" value={charSearch} onChange={this.handleInput} />
-        <button type="button" onClick={this.getProfile}>
-          Get Profile
-        </button>
+        {profile.length > 0 && <Profiles profile={profile} />}
+        <form onSubmit={this.getProfile}>
+          <label htmlFor="search">
+            Profile Name:
+            <input
+              id="search"
+              type="text"
+              value={charSearch}
+              onChange={this.handleInput}
+            />
+          </label>
+          <Button type="submit">Get Profile</Button>
+        </form>
         <div>
-          <button type="button" onClick={this.getHistoricalStats}>
+          <Button type="button" onClick={this.getHistoricalStats}>
             Historical Stats
-          </button>
+          </Button>
         </div>
         <div>
-          <button type="button" onClick={this.getCharacterData}>
+          <Button type="button" onClick={this.getCharacterData}>
             Get Char Data
-          </button>
+          </Button>
         </div>
       </div>
     );
