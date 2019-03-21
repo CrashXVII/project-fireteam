@@ -23,11 +23,9 @@ export default class App extends Component {
       profile: {},
       charSearch: '',
       baseUrl: 'https://www.bungie.net/Platform/Destiny2',
-      manifest: {},
       milestones: {},
       milestoneHashes: [],
       milestoneContent: {},
-      getManifestWorldContent: {},
     };
   }
 
