@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Profiles from './Profiles';
+import Milestones from './Milestones';
 
 const Button = styled.button`
   border-radius: 5px;
@@ -21,7 +22,12 @@ export default class App extends Component {
       historicalStats: {},
       profile: {},
       charSearch: '',
-      baseUrl: 'https://www.bungie.net/Platform/Destiny2/',
+      baseUrl: 'https://www.bungie.net/Platform/Destiny2',
+      manifest: {},
+      milestones: {},
+      milestoneHashes: [],
+      milestoneContent: {},
+      getManifestWorldContent: {},
     };
   }
 
@@ -45,7 +51,7 @@ export default class App extends Component {
   getProfile = async (e) => {
     e.preventDefault();
     const { charSearch } = this.state;
-    const profile = await this.apiCall(`SearchDestinyPlayer/all/${charSearch}/`);
+    const profile = await this.apiCall(`/SearchDestinyPlayer/all/${charSearch}/`);
     this.setState({
       profile,
     });
@@ -53,7 +59,7 @@ export default class App extends Component {
 
   getHistoricalStats = async () => {
     const historicalStats = await this.apiCall(
-      '1/Account/4611686018434143187/Stats/',
+      '/1/Account/4611686018434143187/Stats/',
     );
     this.setState({
       historicalStats,
@@ -62,19 +68,36 @@ export default class App extends Component {
 
   getCharacterData = async () => {
     const charData = await this.apiCall(
-      '1/Profile/4611686018434143187/Character/2305843009271724646/?components=Characters,CharacterActivities',
+      '/1/Profile/4611686018434143187/Character/2305843009271724646/?components=Characters,CharacterProgressions',
     );
     this.setState({
       charData,
     });
   };
 
+  getMilestones = async () => {
+    const milestones = await this.apiCall(
+      '/Milestones/',
+    );
+    const milestoneHashes = await Object.keys(milestones);
+    this.setState({ milestones, milestoneHashes });
+  }
+
+  getMilestoneContent = async (milestoneHash) => {
+    const milestoneContent = await this.apiCall(
+      `/Milestones/${milestoneHash}/Content/`,
+    );
+    this.setState({ milestoneContent });
+  }
+
   handleInput = (e) => {
     this.setState({ charSearch: e.target.value });
   }
 
   render() {
-    const { charSearch, profile } = this.state;
+    const {
+      charSearch, profile, milestoneHashes,
+    } = this.state;
     return (
       <div>
         {profile.length > 0 && <Profiles profile={profile} />}
@@ -93,6 +116,20 @@ export default class App extends Component {
         <div>
           <Button type="button" onClick={this.getHistoricalStats}>
             Historical Stats
+          </Button>
+        </div>
+        <div>
+          {milestoneHashes.length > 0
+          && milestoneHashes.map(hash => (
+            <Milestones
+              key={hash}
+              hash={hash}
+              clickHandler={() => this.getMilestoneContent(hash)}
+            />
+          ))
+          }
+          <Button type="button" onClick={this.getMilestones}>
+            Get Milestones
           </Button>
         </div>
         <div>
