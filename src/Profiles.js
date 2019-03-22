@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 const Profiles = (props) => {
   const { profile } = props;
   return (
-    <div>
+    <ul>
       {profile.map(profiles => (
-        <h1 key={profiles.membershipId}>{profiles.displayName}</h1>
+        <li key={`li${profiles.membershipId}`}>
+          <img src={`https://www.bungie.net${profiles.iconPath}`} alt="platform logo" key={`img${profiles.membershipId}`} />
+          <h1 key={profiles.membershipId}>{profiles.displayName}</h1>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 

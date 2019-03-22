@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Profiles from './Profiles';
 import Milestones from './Milestones';
+import ProfileList from './ProfileList';
 
 const Button = styled.button`
   border-radius: 5px;
@@ -21,7 +21,6 @@ export default class App extends Component {
       charData: {},
       historicalStats: {},
       profile: {},
-      charSearch: '',
       baseUrl: 'https://www.bungie.net/Platform/Destiny2',
       milestones: {},
       milestoneHashes: [],
@@ -44,15 +43,6 @@ export default class App extends Component {
     } catch (e) {
       throw new Error(e);
     }
-  };
-
-  getProfile = async (e) => {
-    e.preventDefault();
-    const { charSearch } = this.state;
-    const profile = await this.apiCall(`/SearchDestinyPlayer/all/${charSearch}/`);
-    this.setState({
-      profile,
-    });
   };
 
   getHistoricalStats = async () => {
@@ -93,24 +83,10 @@ export default class App extends Component {
   }
 
   render() {
-    const {
-      charSearch, profile, milestoneHashes,
-    } = this.state;
+    const { milestoneHashes } = this.state;
     return (
       <div>
-        {profile.length > 0 && <Profiles profile={profile} />}
-        <form onSubmit={this.getProfile}>
-          <label htmlFor="search">
-            Profile Name:
-            <input
-              id="search"
-              type="text"
-              value={charSearch}
-              onChange={this.handleInput}
-            />
-          </label>
-          <Button type="submit">Get Profile</Button>
-        </form>
+        <ProfileList />
         <div>
           <Button type="button" onClick={this.getHistoricalStats}>
             Historical Stats
