@@ -18,13 +18,17 @@ const Li = styled.li`
   }
 `;
 
+const Profile = ({ profile }) => (
+  <Li>
+    <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" />
+    <span>{profile.displayName}</span>
+  </Li>
+);
+
 const ProfileList = ({ profileList }) => (
   <Ul>
     {profileList.map(profile => (
-      <Li key={`li${profile.membershipId}`}>
-        <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" key={`img${profile.membershipId}`} />
-        <span key={profile.membershipId}>{profile.displayName}</span>
-      </Li>
+      <Profile key={profile.membershipId} profile={profile} />
     ))}
   </Ul>
 );
@@ -36,5 +40,14 @@ ProfileList.defaultProps = {
 ProfileList.propTypes = {
   profileList: PropTypes.arrayOf(PropTypes.object),
 };
+
+Profile.defaultProps = {
+  profile: {},
+};
+
+Profile.propTypes = {
+  profile: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
+};
+
 
 export default ProfileList;
