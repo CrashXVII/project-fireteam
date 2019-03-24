@@ -19,7 +19,7 @@ export default class ProfileSearch extends Component {
     super(props);
     this.state = {
       charSearch: '',
-      profile: [],
+      profileList: [],
     };
   }
 
@@ -45,9 +45,9 @@ export default class ProfileSearch extends Component {
   getProfile = async (e) => {
     e.preventDefault();
     const { charSearch } = this.state;
-    const profile = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
+    const profileList = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
     this.setState({
-      profile,
+      profileList,
     });
   };
 
@@ -56,7 +56,7 @@ export default class ProfileSearch extends Component {
   }
 
   render() {
-    const { charSearch, profile } = this.state;
+    const { charSearch, profileList } = this.state;
     return (
       <div>
         <form onSubmit={this.getProfile}>
@@ -71,7 +71,7 @@ export default class ProfileSearch extends Component {
           </label>
           <Button type="submit">Get Profile</Button>
         </form>
-        {profile.length > 0 && <ProfileList profile={profile} />}
+        {profileList.length > 0 && <ProfileList profileList={profileList} />}
       </div>
     );
   }

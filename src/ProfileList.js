@@ -18,26 +18,23 @@ const Li = styled.li`
   }
 `;
 
-const ProfileList = (props) => {
-  const { profile } = props;
-  return (
-    <Ul>
-      {profile.map(profiles => (
-        <Li key={`li${profiles.membershipId}`}>
-          <img src={`https://www.bungie.net${profiles.iconPath}`} alt="platform logo" key={`img${profiles.membershipId}`} />
-          <span key={profiles.membershipId}>{profiles.displayName}</span>
-        </Li>
-      ))}
-    </Ul>
-  );
-};
+const ProfileList = ({ profileList }) => (
+  <Ul>
+    {profileList.map(profile => (
+      <Li key={`li${profile.membershipId}`}>
+        <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" key={`img${profile.membershipId}`} />
+        <span key={profile.membershipId}>{profile.displayName}</span>
+      </Li>
+    ))}
+  </Ul>
+);
 
 ProfileList.defaultProps = {
-  profile: [],
+  profileList: [],
 };
 
 ProfileList.propTypes = {
-  profile: PropTypes.arrayOf(PropTypes.object),
+  profileList: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default ProfileList;
