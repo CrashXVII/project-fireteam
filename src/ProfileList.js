@@ -1,76 +1,43 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Profiles from './Profiles';
 
-const Button = styled.button`
-  border-radius: 5px;
-  background: rgb(70, 101, 184);
-  color: white;
-  width: 120px;
-  height: 35px;
-  :hover {
-    border: solid 2px rgb(95, 207, 235);
+const Ul = styled.ul`
+  list-style: none;
+  padding: 0;
+
+`;
+
+const Li = styled.li`
+  display: flex;
+  padding: 0 0 10px 10px;
+  span {
+    font-size: 20px;
+    padding-left: 10px;
+    
   }
 `;
 
-export default class ProfileList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      charSearch: '',
-      profile: [],
-      baseUrl: 'https://www.bungie.net',
-    };
-  }
+const ProfileList = (props) => {
+  const { profile } = props;
+  return (
+    <Ul>
+      {profile.map(profiles => (
+        <Li key={`li${profiles.membershipId}`}>
+          <img src={`https://www.bungie.net${profiles.iconPath}`} alt="platform logo" key={`img${profiles.membershipId}`} />
+          <span key={profiles.membershipId}>{profiles.displayName}</span>
+        </Li>
+      ))}
+    </Ul>
+  );
+};
 
-  apiCall = async (urlFinish) => {
-    try {
-      const { baseUrl } = this.state;
-      const response = await fetch(`${baseUrl}${urlFinish}`, {
-        method: 'GET',
-        headers: {
-          'X-API-Key': '5d7089e50cbe489d8e4da672a35a3bd1',
-        },
-      });
-      const json = await response.json();
-      const results = await json.Response;
-      return results;
-    } catch (e) {
-      throw new Error(e);
-    }
-  };
+ProfileList.defaultProps = {
+  profile: [],
+};
 
-  getProfile = async (e) => {
-    e.preventDefault();
-    const { charSearch } = this.state;
-    const profile = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
-    this.setState({
-      profile,
-    });
-  };
+ProfileList.propTypes = {
+  profile: PropTypes.arrayOf(PropTypes.object),
+};
 
-  handleInput = (e) => {
-    this.setState({ charSearch: e.target.value });
-  }
-
-  render() {
-    const { charSearch, profile } = this.state;
-    return (
-      <div>
-        <form onSubmit={this.getProfile}>
-          <label htmlFor="search">
-            Profile Name:
-            <input
-              id="search"
-              type="text"
-              value={charSearch}
-              onChange={this.handleInput}
-            />
-          </label>
-          <Button type="submit">Get Profile</Button>
-        </form>
-        {profile.length > 0 && <Profiles profile={profile} />}
-      </div>
-    );
-  }
-}
+export default ProfileList;
