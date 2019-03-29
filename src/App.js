@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Milestones from './Milestones';
 import ProfileSearch from './ProfileSearch';
+import MilestoneList from './MilestoneList';
 
 const Button = styled.button`
   border-radius: 5px;
@@ -19,25 +19,23 @@ export default class App extends Component {
     super(props);
     this.state = {
       charData: {},
-      historicalStats: {},
-      profile: {},
-      milestones: {},
-      milestoneHashes: [],
-      milestoneContent: {},
+      charSearch: '',
+      profileList: [],
     };
+  }
+
+  handleInput = (e) => {
+    this.setState({ charSearch: e.target.value });
   }
 
   apiCall = async (urlFinish) => {
     try {
-      const response = await fetch(
-        `https://www.bungie.net${urlFinish}`,
-        {
-          method: 'GET',
-          headers: {
-            'X-API-Key': '5d7089e50cbe489d8e4da672a35a3bd1',
-          },
+      const response = await fetch(`https://www.bungie.net${urlFinish}`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': '27791402f9fd44678a53e1384df6565c',
         },
-      );
+      });
       const json = await response.json();
       const results = await json.Response;
       return results;
@@ -46,12 +44,12 @@ export default class App extends Component {
     }
   };
 
-  getHistoricalStats = async () => {
-    const historicalStats = await this.apiCall(
-      '/Platform/Destiny2/1/Account/4611686018434143187/Stats/',
-    );
+  getProfile = async (e) => {
+    e.preventDefault();
+    const { charSearch } = this.state;
+    const profileList = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
     this.setState({
-      historicalStats,
+      profileList,
     });
   };
 
@@ -73,43 +71,78 @@ export default class App extends Component {
   }
 
   getMilestoneContent = async () => {
+    const hash = await this.getSQLiteHash(4253138191);
     const milestoneContent = await this.apiCall(
-      '/Platform/Destiny2/Milestones/1300394968/Content/',
+      `/Platform/Destiny2/Milestones/${hash}/Content/`,
     );
     this.setState({ milestoneContent });
   }
 
-  handleInput = (e) => {
-    this.setState({ charSearch: e.target.value });
+  getManifest = async () => {
+    const manifest = await this.apiCall(
+      '/Platform/Destiny2/Manifest/',
+    );
+    this.setState({ manifest });
   }
 
+  getXur = async () => {
+    const xur = await this.apiCall(
+      '/Platform/Destiny2/Vendors/?components=402',
+    );
+    this.setState({ xur });
+  }
+
+  getSQLiteHash = (hashID) => {
+    const hash = this.int32(hashID);
+    console.log(hash);
+    return hash;
+  }
+
+  int32 = (x) => {
+    let y = x;
+    if (y > 0xFFFFFFFFF) {
+      console.log('Error too big');
+    }
+    if (y > 0x7FFFFFFF) {
+      y = 0x100000000 - x;
+      if (y < 2147483648) {
+        y = -y;
+      } else {
+        y = -2147483648;
+      }
+    }
+    return y;
+  }
+
+
   render() {
-    const { milestoneHashes } = this.state;
+    const {
+      charSearch,
+      profileList,
+    } = this.state;
     return (
       <div>
-        <ProfileSearch />
-        <div>
-          <Button type="button" onClick={this.getHistoricalStats}>
-            Historical Stats
-          </Button>
-        </div>
-        <div>
-          {milestoneHashes.length > 0
-          && milestoneHashes.map(hash => (
-            <Milestones
-              key={hash}
-              hash={hash}
-              clickHandler={this.getMilestoneContent}
-            />
-          ))
-          }
-          <Button type="button" onClick={this.getMilestones}>
-            Get Milestones
-          </Button>
-        </div>
+        <ProfileSearch
+          charSearch={charSearch}
+          profileList={profileList}
+          getProfile={this.getProfile}
+          handleInput={this.handleInput}
+        />
         <div>
           <Button type="button" onClick={this.getCharacterData}>
             Get Char Data
+          </Button>
+          <Button type="button" onClick={this.getMilestoneContent}>
+            Get Milestone Content
+          </Button>
+          <Button type="button" onClick={this.getManifest}>
+            Manifest stuff
+          </Button>
+          <Button
+            type="button"
+            onClick={() => this.getSQLiteHash(4253138191)}
+          >
+            HASH!?
           </Button>
         </div>
       </div>

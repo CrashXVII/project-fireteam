@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import ProfileList from './ProfileList';
 
@@ -13,66 +14,46 @@ const Button = styled.button`
   }
 `;
 
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+`;
 
-export default class ProfileSearch extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      charSearch: '',
-      profileList: [],
-    };
-  }
+const ProfileSearch = ({
+  charSearch, profileList, getProfile, handleInput,
+}) => (
+  <Wrapper>
+    <div>
+      <form onSubmit={getProfile}>
+        <label htmlFor="search">
+              Profile Name:
+          <input
+            id="search"
+            type="text"
+            value={charSearch}
+            onChange={handleInput}
+          />
+        </label>
+        <Button type="submit">Get Profile</Button>
+      </form>
+      {profileList.length > 0 && (
+      <ProfileList profileList={profileList} />
+      )}
+    </div>
+    <div />
+  </Wrapper>
+);
 
-  apiCall = async (urlFinish) => {
-    try {
-      const response = await fetch(
-        `https://www.bungie.net${urlFinish}`,
-        {
-          method: 'GET',
-          headers: {
-            'X-API-Key': '5d7089e50cbe489d8e4da672a35a3bd1',
-          },
-        },
-      );
-      const json = await response.json();
-      const results = await json.Response;
-      return results;
-    } catch (e) {
-      throw new Error(e);
-    }
-  };
+ProfileSearch.propTypes = {
+  charSearch: PropTypes.string.isRequired,
+  profileList: PropTypes.arrayOf(PropTypes.object),
+  getProfile: PropTypes.func.isRequired,
+  handleInput: PropTypes.func.isRequired,
+};
 
-  getProfile = async (e) => {
-    e.preventDefault();
-    const { charSearch } = this.state;
-    const profileList = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
-    this.setState({
-      profileList,
-    });
-  };
+ProfileSearch.defaultProps = {
+  profileList: [],
+};
 
-  handleInput = (e) => {
-    this.setState({ charSearch: e.target.value });
-  }
-
-  render() {
-    const { charSearch, profileList } = this.state;
-    return (
-      <div>
-        <form onSubmit={this.getProfile}>
-          <label htmlFor="search">
-            Profile Name:
-            <input
-              id="search"
-              type="text"
-              value={charSearch}
-              onChange={this.handleInput}
-            />
-          </label>
-          <Button type="submit">Get Profile</Button>
-        </form>
-        {profileList.length > 0 && <ProfileList profileList={profileList} />}
-      </div>
-    );
-  }
-}
+export default ProfileSearch;

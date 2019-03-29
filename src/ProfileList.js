@@ -8,10 +8,16 @@ const Ul = styled.ul`
 
 `;
 
+const Button = styled.button`
+  background: none;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  width: 100%;
+`;
+
 const Li = styled.li`
-  display: flex;
   padding: 0 0 10px 10px;
-  span {
+  p {
     font-size: 20px;
     padding-left: 10px;
     
@@ -20,8 +26,10 @@ const Li = styled.li`
 
 const Profile = ({ profile }) => (
   <Li>
-    <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" />
-    <span>{profile.displayName}</span>
+    <Button type="button">
+      <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" />
+      <p>{profile.displayName}</p>
+    </Button>
   </Li>
 );
 
