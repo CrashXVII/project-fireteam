@@ -92,7 +92,7 @@ export default class App extends Component {
     this.setState({ xur });
   }
 
-  getSQLiteHash = (hashID) => {
+  getFromManifest = (hashID) => {
     const hash = this.int32(hashID);
     console.log(hash);
     return hash;
@@ -140,7 +140,7 @@ export default class App extends Component {
           </Button>
           <Button
             type="button"
-            onClick={() => this.getSQLiteHash(4253138191)}
+            onClick={() => this.getFromManifest(4253138191)}
           >
             HASH!?
           </Button>
