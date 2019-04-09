@@ -44,6 +44,38 @@ export default class App extends Component {
     }
   };
 
+  getFromDB = async (path, hash) => {
+    try {
+      const hashId = this.int32(hash);
+      const response = await fetch(`http://localhost:3000/${path}/${hashId}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      const results = await JSON.parse(data.json);
+      this.setState({
+        results,
+      });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  int32 = (x) => {
+    let y = x;
+    if (y > 0xFFFFFFFFF) {
+      console.log('Error too big');
+    }
+    if (y > 0x7FFFFFFF) {
+      y = 0x100000000 - x;
+      if (y < 2147483648) {
+        y = -y;
+      } else {
+        y = -2147483648;
+      }
+    }
+    return y;
+  }
+
   getProfile = async (e) => {
     e.preventDefault();
     const { charSearch } = this.state;
@@ -70,15 +102,15 @@ export default class App extends Component {
     this.setState({ milestones, milestoneHashes });
   }
 
-  getMilestoneContent = async () => {
-    const hash = await this.getSQLiteHash(4253138191);
+  getMilestoneContent = async (hashID) => {
+    const hash = await this.getFromManifest(hashID);
     const milestoneContent = await this.apiCall(
       `/Platform/Destiny2/Milestones/${hash}/Content/`,
     );
     this.setState({ milestoneContent });
   }
 
-  getManifest = async () => {
+  getManifestData = async () => {
     const manifest = await this.apiCall(
       '/Platform/Destiny2/Manifest/',
     );
@@ -91,29 +123,6 @@ export default class App extends Component {
     );
     this.setState({ xur });
   }
-
-  getFromManifest = (hashID) => {
-    const hash = this.int32(hashID);
-    console.log(hash);
-    return hash;
-  }
-
-  int32 = (x) => {
-    let y = x;
-    if (y > 0xFFFFFFFFF) {
-      console.log('Error too big');
-    }
-    if (y > 0x7FFFFFFF) {
-      y = 0x100000000 - x;
-      if (y < 2147483648) {
-        y = -y;
-      } else {
-        y = -2147483648;
-      }
-    }
-    return y;
-  }
-
 
   render() {
     const {
@@ -135,12 +144,15 @@ export default class App extends Component {
           <Button type="button" onClick={this.getMilestoneContent}>
             Get Milestone Content
           </Button>
-          <Button type="button" onClick={this.getManifest}>
+          <Button type="button" onClick={this.getManifestData}>
             Manifest stuff
+          </Button>
+          <Button type="button" onClick={this.getXur}>
+            Xur
           </Button>
           <Button
             type="button"
-            onClick={() => this.getFromManifest(4253138191)}
+            onClick={() => this.getFromDB("item", 3141979346)}
           >
             HASH!?
           </Button>
