@@ -9,10 +9,13 @@ const Ul = styled.ul`
 
 const Li = styled.li`
   padding: 0 0 10px 10px;
-  p {
+  span {
     font-size: 20px;
     padding-left: 10px;
     
+  }
+  :hover {
+    cursor: pointer;
   }
 `;
 

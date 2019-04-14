@@ -11,6 +11,7 @@ const Button = styled.button`
   height: 35px;
   :hover {
     border: solid 2px rgb(95, 207, 235);
+    cursor: pointer;
   }
 `;
 
