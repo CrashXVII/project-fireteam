@@ -16,17 +16,17 @@ const Li = styled.li`
   }
 `;
 
-const Profile = ({ profile, getCharData }) => (
-  <Li onClick={() => getCharData(profile.membershipType, profile.membershipId)}>
+const Profile = ({ profile, getProfile }) => (
+  <Li onClick={() => getProfile(profile.membershipType, profile.membershipId)}>
     <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" />
     <span>{profile.displayName}</span>
   </Li>
 );
 
-const ProfileList = ({ profileList, getCharData }) => (
+const ProfileList = ({ profileList, getProfile }) => (
   <Ul>
     {profileList.map(profile => (
-      <Profile key={profile.membershipId} profile={profile} getCharData={getCharData} />
+      <Profile key={profile.membershipId} profile={profile} getProfile={getProfile} />
     ))}
   </Ul>
 );
@@ -37,7 +37,7 @@ ProfileList.defaultProps = {
 
 ProfileList.propTypes = {
   profileList: PropTypes.arrayOf(PropTypes.object),
-  getCharData: PropTypes.func.isRequired,
+  getProfile: PropTypes.func.isRequired,
 };
 
 Profile.defaultProps = {
@@ -45,7 +45,7 @@ Profile.defaultProps = {
 };
 
 Profile.propTypes = {
-  getCharData: PropTypes.func.isRequired,
+  getProfile: PropTypes.func.isRequired,
   profile: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   ),

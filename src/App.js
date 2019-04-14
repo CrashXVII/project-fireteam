@@ -5,7 +5,6 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      charData: {},
       charSearch: '',
       profileList: [],
     };
@@ -63,7 +62,7 @@ export default class App extends Component {
     return y;
   }
 
-  getProfiles = async (e) => {
+  searchProfiles = async (e) => {
     e.preventDefault();
     const { charSearch } = this.state;
     const profileList = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
@@ -72,12 +71,12 @@ export default class App extends Component {
     });
   };
 
-  getCharacterData = async (membershipType, destinyMembershipId) => {
+  getProfile = async (membershipType, destinyMembershipId) => {
     const characters = await this.apiCall(
-      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=Profiles,Characters,CharacterProgressions`,
+      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=Characters`,
     );
     await this.setState({
-      characters,
+      characters: characters.characters.data,
     });
   }
 
@@ -106,8 +105,8 @@ export default class App extends Component {
         <ProfileSearch
           charSearch={charSearch}
           profileList={profileList}
-          getProfiles={this.getProfiles}
-          getCharData={this.getCharacterData}
+          searchProfiles={this.searchProfiles}
+          getProfile={this.getProfile}
           handleInput={this.handleInput}
         />
       </div>

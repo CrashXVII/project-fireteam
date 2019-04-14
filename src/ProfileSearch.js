@@ -21,11 +21,11 @@ const Wrapper = styled.div`
 `;
 
 const ProfileSearch = ({
-  charSearch, profileList, getProfiles, handleInput, getCharData,
+  charSearch, profileList, searchProfiles, handleInput, getProfile,
 }) => (
   <Wrapper>
     <div>
-      <form onSubmit={getProfiles}>
+      <form onSubmit={searchProfiles}>
         <label htmlFor="search">
               Profile Name:
           <input
@@ -38,7 +38,7 @@ const ProfileSearch = ({
         <Button type="submit">Get Profile</Button>
       </form>
       {profileList.length > 0 && (
-      <ProfileList profileList={profileList} getCharData={getCharData} />
+      <ProfileList profileList={profileList} getProfile={getProfile} />
       )}
     </div>
     <div />
@@ -48,8 +48,8 @@ const ProfileSearch = ({
 ProfileSearch.propTypes = {
   charSearch: PropTypes.string.isRequired,
   profileList: PropTypes.arrayOf(PropTypes.object),
-  getProfiles: PropTypes.func.isRequired,
-  getCharData: PropTypes.func.isRequired,
+  searchProfiles: PropTypes.func.isRequired,
+  getProfile: PropTypes.func.isRequired,
   handleInput: PropTypes.func.isRequired,
 };
 
