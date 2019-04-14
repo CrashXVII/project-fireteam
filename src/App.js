@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ProfileSearch from './ProfileSearch';
-import MilestoneList from './MilestoneList';
 
 const Button = styled.button`
   border-radius: 5px;
@@ -63,7 +62,7 @@ export default class App extends Component {
   int32 = (x) => {
     let y = x;
     if (y > 0xFFFFFFFFF) {
-      console.log('Error too big');
+      throw new Error('Hash too big');
     }
     if (y > 0x7FFFFFFF) {
       y = 0x100000000 - x;
@@ -76,21 +75,12 @@ export default class App extends Component {
     return y;
   }
 
-  getProfile = async (e) => {
+  getProfiles = async (e) => {
     e.preventDefault();
     const { charSearch } = this.state;
     const profileList = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
     this.setState({
       profileList,
-    });
-  };
-
-  getCharacterData = async () => {
-    const charData = await this.apiCall(
-      '/Platform/Destiny2/1/Profile/4611686018434143187/Character/2305843009271724646/?components=Characters,CharacterProgressions',
-    );
-    this.setState({
-      charData,
     });
   };
 
@@ -117,13 +107,6 @@ export default class App extends Component {
     this.setState({ manifest });
   }
 
-  getXur = async () => {
-    const xur = await this.apiCall(
-      '/Platform/Destiny2/Vendors/?components=402',
-    );
-    this.setState({ xur });
-  }
-
   render() {
     const {
       charSearch,
@@ -134,25 +117,17 @@ export default class App extends Component {
         <ProfileSearch
           charSearch={charSearch}
           profileList={profileList}
-          getProfile={this.getProfile}
+          getProfiles={this.getProfiles}
+          getCharData={this.getCharacterData}
           handleInput={this.handleInput}
         />
         <div>
-          <Button type="button" onClick={this.getCharacterData}>
-            Get Char Data
-          </Button>
-          <Button type="button" onClick={this.getMilestoneContent}>
-            Get Milestone Content
-          </Button>
           <Button type="button" onClick={this.getManifestData}>
             Manifest stuff
           </Button>
-          <Button type="button" onClick={this.getXur}>
-            Xur
-          </Button>
           <Button
             type="button"
-            onClick={() => this.getFromDB("item", 3141979346)}
+            onClick={() => this.getFromDB('item', 3141979346)}
           >
             HASH!?
           </Button>

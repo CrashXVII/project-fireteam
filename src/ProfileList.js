@@ -5,14 +5,6 @@ import styled from 'styled-components';
 const Ul = styled.ul`
   list-style: none;
   padding: 0;
-
-`;
-
-const Button = styled.button`
-  background: none;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  width: 100%;
 `;
 
 const Li = styled.li`
@@ -24,19 +16,17 @@ const Li = styled.li`
   }
 `;
 
-const Profile = ({ profile }) => (
-  <Li>
-    <Button type="button">
-      <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" />
-      <p>{profile.displayName}</p>
-    </Button>
+const Profile = ({ profile, getCharData }) => (
+  <Li onClick={getCharData}>
+    <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" />
+    <span>{profile.displayName}</span>
   </Li>
 );
 
-const ProfileList = ({ profileList }) => (
+const ProfileList = ({ profileList, getCharData }) => (
   <Ul>
     {profileList.map(profile => (
-      <Profile key={profile.membershipId} profile={profile} />
+      <Profile key={profile.membershipId} profile={profile} getCharData={getCharData} />
     ))}
   </Ul>
 );
@@ -47,6 +37,7 @@ ProfileList.defaultProps = {
 
 ProfileList.propTypes = {
   profileList: PropTypes.arrayOf(PropTypes.object),
+  getCharData: PropTypes.func.isRequired,
 };
 
 Profile.defaultProps = {
@@ -54,7 +45,10 @@ Profile.defaultProps = {
 };
 
 Profile.propTypes = {
-  profile: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
+  getCharData: PropTypes.func.isRequired,
+  profile: PropTypes.objectOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  ),
 };
 
 
