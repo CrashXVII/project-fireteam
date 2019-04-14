@@ -17,7 +17,7 @@ const Li = styled.li`
 `;
 
 const Profile = ({ profile, getCharData }) => (
-  <Li onClick={getCharData}>
+  <Li onClick={() => getCharData(profile.membershipType, profile.membershipId)}>
     <img src={`https://www.bungie.net${profile.iconPath}`} alt="platform logo" />
     <span>{profile.displayName}</span>
   </Li>

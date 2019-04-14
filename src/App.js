@@ -1,17 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import ProfileSearch from './ProfileSearch';
-
-const Button = styled.button`
-  border-radius: 5px;
-  background: rgb(70, 101, 184);
-  color: white;
-  width: 120px;
-  height: 35px;
-  :hover {
-    border: solid 2px rgb(95, 207, 235);
-  }
-`;
 
 export default class App extends Component {
   constructor(props) {
@@ -84,12 +72,13 @@ export default class App extends Component {
     });
   };
 
-  getMilestones = async () => {
-    const milestones = await this.apiCall(
-      '/Platform/Destiny2/Milestones/',
+  getCharacterData = async (membershipType, destinyMembershipId) => {
+    const characters = await this.apiCall(
+      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=Profiles,Characters,CharacterProgressions`,
     );
-    const milestoneHashes = await Object.keys(milestones);
-    this.setState({ milestones, milestoneHashes });
+    await this.setState({
+      characters,
+    });
   }
 
   getMilestoneContent = async (hashID) => {
@@ -121,17 +110,6 @@ export default class App extends Component {
           getCharData={this.getCharacterData}
           handleInput={this.handleInput}
         />
-        <div>
-          <Button type="button" onClick={this.getManifestData}>
-            Manifest stuff
-          </Button>
-          <Button
-            type="button"
-            onClick={() => this.getFromDB('item', 3141979346)}
-          >
-            HASH!?
-          </Button>
-        </div>
       </div>
     );
   }
