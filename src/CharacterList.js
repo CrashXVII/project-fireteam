@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Character from './Character';
 
-const CharacterList = ({ characterValues, getCharacter }) => (
+const CharacterList = ({ characterList, getCharacter }) => (
   <div>
-    {characterValues.map(character => (
+    {characterList.map(character => (
       <Character key={character.characterId} onClick={getCharacter} character={character} />
     ))}
   </div>
 );
 
 CharacterList.propTypes = {
-  characterValues: PropTypes.arrayOf(
+  characterList: PropTypes.arrayOf(
     PropTypes.object,
   ).isRequired,
   getCharacter: PropTypes.func.isRequired,

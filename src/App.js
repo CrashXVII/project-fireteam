@@ -13,7 +13,7 @@ export default class App extends Component {
     this.state = {
       charSearch: '',
       profileList: [],
-      characterValues: [],
+      charList: [],
     };
   }
 
@@ -82,10 +82,9 @@ export default class App extends Component {
     const characterList = await this.apiCall(
       `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=Characters`,
     );
-    const characterValues = await Object.values(characterList.characters.data);
+    const charList = await Object.values(characterList.characters.data);
     await this.setState({
-      characterList: characterList.characters.data,
-      characterValues,
+      charList,
     });
   }
 
@@ -117,23 +116,21 @@ export default class App extends Component {
     const {
       charSearch,
       profileList,
-      characterList,
-      characterValues,
+      charList,
     } = this.state;
     return (
       <Container>
         <ProfileSearch
           charSearch={charSearch}
           profileList={profileList}
-          characterList={characterList}
+          charList={charList}
           searchProfiles={this.searchProfiles}
           getProfile={this.getProfile}
           handleInput={this.handleInput}
         />
-        {characterValues.length > 0 && (
+        {charList.length > 0 && (
           <CharacterList
-            characterValues={characterValues}
-            characterList={characterList}
+            characterList={charList}
             getCharacter={this.getCharacter}
           />
         )}
