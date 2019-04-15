@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  
+  border: 1px solid red;
 `;
 
 function Character({ character }) {
@@ -16,7 +16,7 @@ function Character({ character }) {
 
 Character.propTypes = {
   character: PropTypes.objectOf(
-    PropTypes.oneOfType(PropTypes.string, PropTypes.number),
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   ).isRequired,
 };
 

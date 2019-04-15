@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import ProfileSearch from './ProfileSearch';
+import CharacterList from './CharacterList';
 
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       charSearch: '',
       profileList: [],
+      characterValues: [],
     };
   }
 
@@ -72,11 +79,22 @@ export default class App extends Component {
   };
 
   getProfile = async (membershipType, destinyMembershipId) => {
-    const characters = await this.apiCall(
+    const characterList = await this.apiCall(
       `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=Characters`,
     );
+    const characterValues = await Object.values(characterList.characters.data);
     await this.setState({
-      characters: characters.characters.data,
+      characterList: characterList.characters.data,
+      characterValues,
+    });
+  }
+
+  getCharacter = async (membershipType, destinyMembershipId, characterId) => {
+    const character = await this.apiCall(
+      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=CharacterProgresssions,CharacterInventories,CharacterEquipment`,
+    );
+    this.setState({
+      character,
     });
   }
 
@@ -99,17 +117,28 @@ export default class App extends Component {
     const {
       charSearch,
       profileList,
+      characterList,
+      characterValues,
     } = this.state;
     return (
-      <div>
+      <Container>
         <ProfileSearch
           charSearch={charSearch}
           profileList={profileList}
+          characterList={characterList}
           searchProfiles={this.searchProfiles}
           getProfile={this.getProfile}
           handleInput={this.handleInput}
         />
-      </div>
+        {characterValues.length > 0 && (
+          <CharacterList
+            characterValues={characterValues}
+            characterList={characterList}
+            getCharacter={this.getCharacter}
+          />
+        )}
+
+      </Container>
     );
   }
 }
