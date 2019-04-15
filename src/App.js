@@ -90,7 +90,7 @@ export default class App extends Component {
 
   getCharacter = async (membershipType, destinyMembershipId, characterId) => {
     const character = await this.apiCall(
-      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=CharacterProgresssions,CharacterInventories,CharacterEquipment`,
+      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=CharacterProgressions,CharacterInventories,CharacterEquipment`,
     );
     this.setState({
       character,

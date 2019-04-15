@@ -5,7 +5,7 @@ import Character from './Character';
 const CharacterList = ({ characterList, getCharacter }) => (
   <div>
     {characterList.map(character => (
-      <Character key={character.characterId} onClick={getCharacter} character={character} />
+      <Character key={character.characterId} getCharacter={getCharacter} character={character} />
     ))}
   </div>
 );
