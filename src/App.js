@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import ProfileSearch from './ProfileSearch';
 import CharacterList from './CharacterList';
+import HashConverter from './HashConverter';
 
 const Container = styled.div`
   display: grid;
@@ -119,23 +120,27 @@ export default class App extends Component {
       charList,
     } = this.state;
     return (
-      <Container>
-        <ProfileSearch
-          charSearch={charSearch}
-          profileList={profileList}
-          charList={charList}
-          searchProfiles={this.searchProfiles}
-          getProfile={this.getProfile}
-          handleInput={this.handleInput}
-        />
-        {charList.length > 0 && (
+      <div>
+        <Container>
+          <ProfileSearch
+            charSearch={charSearch}
+            profileList={profileList}
+            charList={charList}
+            searchProfiles={this.searchProfiles}
+            getProfile={this.getProfile}
+            handleInput={this.handleInput}
+          />
+          {charList.length > 0 && (
           <CharacterList
             characterList={charList}
             getCharacter={this.getCharacter}
           />
-        )}
-
-      </Container>
+          )}
+        </Container>
+        <div>
+          <HashConverter />
+        </div>
+      </div>
     );
   }
 }
