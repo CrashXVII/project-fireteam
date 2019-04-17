@@ -57,7 +57,7 @@ export default class HashConverter extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="search">
-            Profile Name:
+            Hash Search:
             <input
               id="search"
               type="text"

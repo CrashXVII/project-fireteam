@@ -73,6 +73,9 @@ export default class App extends Component {
   searchProfiles = async (e) => {
     e.preventDefault();
     const { charSearch } = this.state;
+    if (!charSearch) {
+      return;
+    }
     const profileList = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
     this.setState({
       profileList,
