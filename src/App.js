@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ProfileSearch from './ProfileSearch';
 import CharacterList from './CharacterList';
 import HashConverter from './HashConverter';
-import MilestoneList from './MilestoneList';
+import Character from './Character';
 
 const Container = styled.div`
   display: grid;
@@ -16,7 +16,7 @@ export default class App extends Component {
       charSearch: '',
       profileList: [],
       charList: [],
-      progressions: {},
+      progressions: null,
     };
   }
 
@@ -80,7 +80,7 @@ export default class App extends Component {
 
   getCharacter = async (membershipType, destinyMembershipId, characterId) => {
     const character = await this.apiCall(
-      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=CharacterProgressions,CharacterInventories,CharacterEquipment`,
+      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=Profiles,CharacterProgressions,CharacterInventories,CharacterEquipment`,
     );
     const progressions = await character.progressions.data;
     this.setState({
@@ -123,7 +123,7 @@ export default class App extends Component {
         </Container>
         <div>
           <HashConverter />
-          <MilestoneList progressions={progressions} />
+          {progressions && (<Character progressions={progressions} />)}
         </div>
       </div>
     );

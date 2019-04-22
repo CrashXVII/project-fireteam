@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class MilestoneList extends Component {
+export default class Character extends Component {
   static propTypes = {
-
+    progressions: PropTypes.objectOf(
+      PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+      ]),
+    ).isRequired,
   }
 
   constructor(props) {
     super(props);
+    const { progressions } = this.props;
     this.state = {
       milestones: [],
+      progressions,
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    const { progressions } = this.props;
+    if (prevProps.progressions !== progressions) {
+      this.setState([progressions]);
+    }
   }
 
   int32 = (x) => {
@@ -39,7 +53,6 @@ export default class MilestoneList extends Component {
       const milestones = await JSON.parse(data.json);
       this.setState({
         milestones,
-        progressions: this.props.progressions,
       });
     } catch (e) {
       throw new Error(e);
