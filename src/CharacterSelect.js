@@ -11,7 +11,7 @@ const Container = styled.div`
   cursor: pointer;
 `;
 
-function Character({ character, getCharacter }) {
+function CharacterSelect({ character, getCharacter }) {
   return (
     <Container
       character={character}
@@ -23,11 +23,11 @@ function Character({ character, getCharacter }) {
   );
 }
 
-Character.propTypes = {
+CharacterSelect.propTypes = {
   character: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   ).isRequired,
   getCharacter: PropTypes.func.isRequired,
 };
 
-export default Character;
+export default CharacterSelect;

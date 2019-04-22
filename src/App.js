@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ProfileSearch from './ProfileSearch';
 import CharacterList from './CharacterList';
 import HashConverter from './HashConverter';
+import MilestoneList from './MilestoneList';
 
 const Container = styled.div`
   display: grid;
@@ -15,6 +16,7 @@ export default class App extends Component {
       charSearch: '',
       profileList: [],
       charList: [],
+      progressions: {},
     };
   }
 
@@ -37,22 +39,6 @@ export default class App extends Component {
       throw new Error(e);
     }
   };
-
-  getFromDB = async (path, hash) => {
-    try {
-      const hashId = this.int32(hash);
-      const response = await fetch(`http://localhost:3000/${path}/${hashId}`, {
-        method: 'GET',
-      });
-      const data = await response.json();
-      const results = await JSON.parse(data.json);
-      this.setState({
-        results,
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
 
   int32 = (x) => {
     let y = x;
@@ -96,17 +82,11 @@ export default class App extends Component {
     const character = await this.apiCall(
       `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=CharacterProgressions,CharacterInventories,CharacterEquipment`,
     );
+    const progressions = await character.progressions.data;
     this.setState({
       character,
+      progressions,
     });
-  }
-
-  getMilestoneContent = async (hashID) => {
-    const hash = await this.getFromManifest(hashID);
-    const milestoneContent = await this.apiCall(
-      `/Platform/Destiny2/Milestones/${hash}/Content/`,
-    );
-    this.setState({ milestoneContent });
   }
 
   getManifestData = async () => {
@@ -121,6 +101,7 @@ export default class App extends Component {
       charSearch,
       profileList,
       charList,
+      progressions,
     } = this.state;
     return (
       <div>
@@ -142,6 +123,7 @@ export default class App extends Component {
         </Container>
         <div>
           <HashConverter />
+          <MilestoneList progressions={progressions} />
         </div>
       </div>
     );
