@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import ProfileList from './ProfileList';
 
 const Button = styled.button`
   border-radius: 5px;
@@ -21,41 +20,55 @@ const Wrapper = styled.div`
   grid-gap: 15px;
 `;
 
-const ProfileSearch = ({
-  charSearch, profileList, searchProfiles, handleInput, getProfile,
-}) => (
-  <Wrapper>
-    <div>
-      <form onSubmit={searchProfiles}>
-        <label htmlFor="search">
-              Profile Name:
-          <input
-            id="search"
-            type="text"
-            value={charSearch}
-            onChange={handleInput}
-          />
-        </label>
-        <Button type="submit">Get Profile</Button>
-      </form>
-      {profileList.length > 0 && (
-      <ProfileList profileList={profileList} getProfile={getProfile} />
-      )}
-    </div>
-    <div />
-  </Wrapper>
-);
 
-ProfileSearch.propTypes = {
-  charSearch: PropTypes.string.isRequired,
-  profileList: PropTypes.arrayOf(PropTypes.object),
-  searchProfiles: PropTypes.func.isRequired,
-  getProfile: PropTypes.func.isRequired,
-  handleInput: PropTypes.func.isRequired,
-};
+export default class ProfileSearch extends Component {
+  static propTypes = {
+    sendProfiles: PropTypes.func.isRequired,
+    apiCall: PropTypes.func.isRequired,
+  }
 
-ProfileSearch.defaultProps = {
-  profileList: [],
-};
+  constructor(props) {
+    super(props);
+    this.state = {
+      charSearch: '',
+    };
+  }
 
-export default ProfileSearch;
+  handleInput = (e) => {
+    this.setState({ charSearch: e.target.value });
+  }
+
+  searchProfiles = async (e) => {
+    e.preventDefault();
+    const { charSearch } = this.state;
+    const { sendProfiles, apiCall } = this.props;
+    if (!charSearch) {
+      return;
+    }
+    const profileList = await apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
+    await sendProfiles(profileList);
+  };
+
+  render() {
+    const { charSearch } = this.state;
+    return (
+      <Wrapper>
+        <div>
+          <form onSubmit={this.searchProfiles}>
+            <label htmlFor="charSearch">
+                Profile Name:
+              <input
+                name="charSearch"
+                type="search"
+                value={charSearch}
+                onChange={this.handleInput}
+              />
+            </label>
+            <Button type="submit">Get Profile</Button>
+          </form>
+        </div>
+        <div />
+      </Wrapper>
+    );
+  }
+}

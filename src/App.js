@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import ProfileSearch from './ProfileSearch';
 import CharacterList from './CharacterList';
+import ProfileList from './ProfileList';
 import HashConverter from './HashConverter';
 import Character from './Character';
 
@@ -56,18 +57,6 @@ export default class App extends Component {
     return y;
   }
 
-  searchProfiles = async (e) => {
-    e.preventDefault();
-    const { charSearch } = this.state;
-    if (!charSearch) {
-      return;
-    }
-    const profileList = await this.apiCall(`/Platform/Destiny2/SearchDestinyPlayer/all/${charSearch}/`);
-    this.setState({
-      profileList,
-    });
-  };
-
   getProfile = async (membershipType, destinyMembershipId) => {
     const characterList = await this.apiCall(
       `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=Characters`,
@@ -89,6 +78,12 @@ export default class App extends Component {
     });
   }
 
+  sendProfiles = (profileList) => {
+    this.setState({
+      profileList,
+    });
+  }
+
   getManifestData = async () => {
     const manifest = await this.apiCall(
       '/Platform/Destiny2/Manifest/',
@@ -98,22 +93,17 @@ export default class App extends Component {
 
   render() {
     const {
-      charSearch,
-      profileList,
       charList,
       progressions,
+      profileList,
     } = this.state;
     return (
       <div>
         <Container>
-          <ProfileSearch
-            charSearch={charSearch}
-            profileList={profileList}
-            charList={charList}
-            searchProfiles={this.searchProfiles}
-            getProfile={this.getProfile}
-            handleInput={this.handleInput}
-          />
+          <ProfileSearch sendProfiles={this.sendProfiles} apiCall={this.apiCall} />
+          {profileList.length > 0 && (
+          <ProfileList profileList={profileList} getProfile={this.getProfile} />
+          )}
           {charList.length > 0 && (
           <CharacterList
             characterList={charList}
