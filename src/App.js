@@ -41,6 +41,17 @@ export default class App extends Component {
     }
   };
 
+  dbQuery = async (searchPath, searchID) => {
+    try {
+      const response = await fetch(`localhost:3000/${searchPath}/${searchID}`, {
+        method: 'GET',
+      });
+      console.log(response);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
   int32 = (x) => {
     let y = x;
     if (y > 0xFFFFFFFFF) {
@@ -101,6 +112,7 @@ export default class App extends Component {
       <div>
         <Container>
           <ProfileSearch sendProfiles={this.sendProfiles} apiCall={this.apiCall} />
+          <button type="button" onClick={this.getManifestData}>mani</button>
           {profileList.length > 0 && (
           <ProfileList profileList={profileList} getProfile={this.getProfile} />
           )}
