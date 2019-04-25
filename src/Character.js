@@ -29,6 +29,7 @@ export default class Character extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
     };
   }
 
@@ -86,8 +87,8 @@ export default class Character extends Component {
     return (
       <div>
         <p>Milestone Testing</p>
-        {/* {milestoneList.length > 0
-          && milestoneList.map(milestones => <Milestone milestones={milestones} />)} */}
+        {milestoneList
+          && milestoneList.map(milestones => <Milestone key={milestones.hash} milestones={milestones} />)}
       </div>
     );
   }
