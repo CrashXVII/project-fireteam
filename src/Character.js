@@ -76,11 +76,14 @@ export default class Character extends Component {
       );
       const data = await response.json();
       const milestones = await JSON.parse(data.json);
+      // TODO: There will be failure here when database is out of date!
       return await milestones;
     } catch (error) {
       throw new Error(error);
     }
   }
+
+  // TODO: Next up is calls to the API to check live status of Milestone progression.
 
   render() {
     const { milestoneList } = this.state;
@@ -88,7 +91,9 @@ export default class Character extends Component {
       <div>
         <p>Milestone Testing</p>
         {milestoneList
-          && milestoneList.map(milestones => <Milestone key={milestones.hash} milestones={milestones} />)}
+          && milestoneList.map(
+            milestones => <Milestone key={milestones.hash} milestones={milestones} />,
+          )}
       </div>
     );
   }
