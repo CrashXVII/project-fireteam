@@ -2,18 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Button = styled.button`
-  border-radius: 5px;
-  background: rgb(70, 101, 184);
-  color: white;
-  width: 120px;
-  height: 35px;
-  :hover {
-    border: solid 2px rgb(95, 207, 235);
-    cursor: pointer;
-  }
-`;
-
 const Img = styled.img`
   background: black;
 `;
@@ -40,11 +28,12 @@ export default class Character extends Component {
 
   constructor(props) {
     super(props);
-    const { progressions } = this.props;
     this.state = {
-      progressions,
-      hash: '',
     };
+  }
+
+  componentDidMount() {
+    this.getMilestoneArray();
   }
 
   int32 = (x) => {
@@ -63,10 +52,20 @@ export default class Character extends Component {
     return y;
   }
 
-  getFromDB = async (e) => {
-    e.preventDefault();
+  getMilestoneArray = async () => {
+    const { progressions } = this.props;
+    const milestoneArray = Object.values(progressions.milestones);
+    const milestoneList = await Promise.all(milestoneArray.map(
+      milestone => this.getFromDB(milestone),
+    ));
+    await this.setState({
+      milestoneList,
+    });
+  }
+
+  getFromDB = async (milestone) => {
     try {
-      const { hash } = this.state;
+      const hash = milestone.milestoneHash;
       const hashId = this.int32(hash);
       const response = await fetch(
         `http://localhost:3000/milestones/${hashId}`,
@@ -76,38 +75,19 @@ export default class Character extends Component {
       );
       const data = await response.json();
       const milestones = await JSON.parse(data.json);
-      this.setState({
-        milestones,
-      });
+      return await milestones;
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  handleInput = (e) => {
-    this.setState({
-      hash: e.target.value,
-    });
-  }
-
   render() {
-    const { hash, milestones } = this.state;
+    const { milestoneList } = this.state;
     return (
       <div>
         <p>Milestone Testing</p>
-        <form onSubmit={this.getFromDB}>
-          <input
-            type="search"
-            name="milestone"
-            value={hash}
-            onChange={this.handleInput}
-          />
-          <Button type="submit">MILESTONE!</Button>
-        </form>
-
-        {milestones && (
-          <Milestone milestones={milestones} />
-        )}
+        {/* {milestoneList.length > 0
+          && milestoneList.map(milestones => <Milestone milestones={milestones} />)} */}
       </div>
     );
   }
