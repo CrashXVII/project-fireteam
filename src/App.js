@@ -14,15 +14,10 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      charSearch: '',
       profileList: [],
       charList: [],
       progressions: null,
     };
-  }
-
-  handleInput = (e) => {
-    this.setState({ charSearch: e.target.value });
   }
 
   apiCall = async (urlFinish) => {
@@ -40,17 +35,6 @@ export default class App extends Component {
       throw new Error(e);
     }
   };
-
-  dbQuery = async (searchPath, searchID) => {
-    try {
-      const response = await fetch(`localhost:3000/${searchPath}/${searchID}`, {
-        method: 'GET',
-      });
-      console.log(response);
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
 
   int32 = (x) => {
     let y = x;
@@ -80,10 +64,12 @@ export default class App extends Component {
 
   getCharacter = async (membershipType, destinyMembershipId, characterId) => {
     const character = await this.apiCall(
-      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=Profiles,CharacterProgressions,CharacterInventories,CharacterEquipment`,
+      `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/Character/${characterId}/?components=Profiles,CharacterActivities,CharacterProgressions,CharacterInventories,CharacterEquipment`,
     );
     const progressions = await character.progressions.data;
+    const activities = await character.activities.data;
     this.setState({
+      activities,
       character,
       progressions,
     });
@@ -105,8 +91,10 @@ export default class App extends Component {
   render() {
     const {
       charList,
+      character,
       progressions,
       profileList,
+      activities,
     } = this.state;
     return (
       <div>
@@ -125,7 +113,13 @@ export default class App extends Component {
         </Container>
         <div>
           <HashConverter />
-          {progressions && (<Character progressions={progressions} />)}
+          {progressions && (
+          <Character
+            progressions={progressions}
+            activities={activities}
+            character={character}
+          />
+          )}
         </div>
       </div>
     );

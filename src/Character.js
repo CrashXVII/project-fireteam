@@ -24,13 +24,11 @@ export default class Character extends Component {
         PropTypes.array,
       ]),
     ).isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -39,10 +37,10 @@ export default class Character extends Component {
 
   int32 = (x) => {
     let y = x;
-    if (y > 0xFFFFFFFFF) {
+    if (y > 0xfffffffff) {
       throw new Error('Hash too big');
     }
-    if (y > 0x7FFFFFFF) {
+    if (y > 0x7fffffff) {
       y = 0x100000000 - x;
       if (y < 2147483648) {
         y = -y;
@@ -51,20 +49,23 @@ export default class Character extends Component {
       }
     }
     return y;
-  }
+  };
 
   getMilestoneArray = async () => {
     const { progressions } = this.props;
-    const milestoneArray = Object.values(progressions.milestones);
-    const milestoneList = await Promise.all(milestoneArray.map(
-      milestone => this.getFromDB(milestone),
-    ));
+    const milestoneArray = Object.values(
+      progressions.milestones,
+    );
+    const milestoneList = await Promise.all(
+      milestoneArray.map(milestone => this.getMilestoneFromDB(milestone)),
+    );
     await this.setState({
       milestoneList,
     });
-  }
+  };
 
-  getFromDB = async (milestone) => {
+
+  getMilestoneFromDB = async (milestone) => {
     try {
       const hash = milestone.milestoneHash;
       const hashId = this.int32(hash);
@@ -75,13 +76,15 @@ export default class Character extends Component {
         },
       );
       const data = await response.json();
-      const milestones = await JSON.parse(data.json);
+      const milestones = await JSON.parse(
+        data.json,
+      );
       // TODO: There will be failure here when database is out of date!
       return await milestones;
     } catch (error) {
       throw new Error(error);
     }
-  }
+  };
 
   // TODO: Next up is calls to the API to check live status of Milestone progression.
 
@@ -91,9 +94,12 @@ export default class Character extends Component {
       <div>
         <p>Milestone Testing</p>
         {milestoneList
-          && milestoneList.map(
-            milestones => <Milestone key={milestones.hash} milestones={milestones} />,
-          )}
+          && milestoneList.map(milestones => (
+            <Milestone
+              key={milestones.hash}
+              milestones={milestones}
+            />
+          ))}
       </div>
     );
   }
