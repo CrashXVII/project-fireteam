@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Milestone from './Milestone';
 
 const Img = styled.img`
   background: black;
 `;
 
-const Milestone = ({ milestones }) => (
-  <div>
-    {milestones.displayProperties.hasIcon
-    && <Img src={`https://www.bungie.net${milestones.displayProperties.icon}`} alt="Milestone Icon" />
-    }
-    <p>{milestones.displayProperties.name}</p>
-    <p>{milestones.displayProperties.description}</p>
-  </div>
-);
+// const Milestone = ({ milestone }) => (
+//   <div>
+//     {milestone.displayProperties.hasIcon
+//   && <Img src={`https://www.bungie.net${milestone.displayProperties.icon}`} alt="Milestone Icon" />
+//   }
+//     <p>{milestone.displayProperties.name}</p>
+//     <p>{milestone.displayProperties.description}</p>
+//   </div>
+// );
 
 export default class Character extends Component {
   static propTypes = {
@@ -94,10 +95,10 @@ export default class Character extends Component {
       <div>
         <p>Milestone Testing</p>
         {milestoneList
-          && milestoneList.map(milestones => (
+          && milestoneList.map(milestone => (
             <Milestone
-              key={milestones.hash}
-              milestones={milestones}
+              key={milestone.hash}
+              milestone={milestone}
             />
           ))}
       </div>

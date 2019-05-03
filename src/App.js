@@ -52,13 +52,14 @@ export default class App extends Component {
     return y;
   }
 
-  getProfile = async (membershipType, destinyMembershipId) => {
+  getProfile = async (membershipType, destinyMembershipId, displayName) => {
     const characterList = await this.apiCall(
       `/Platform/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=Characters`,
     );
     const charList = await Object.values(characterList.characters.data);
     await this.setState({
       charList,
+      displayName,
     });
   }
 
