@@ -1,21 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import Milestone from './Milestone';
 
-const Img = styled.img`
-  background: black;
-`;
-
-// const Milestone = ({ milestone }) => (
-//   <div>
-//     {milestone.displayProperties.hasIcon
-//   && <Img src={`https://www.bungie.net${milestone.displayProperties.icon}`} alt="Milestone Icon" />
-//   }
-//     <p>{milestone.displayProperties.name}</p>
-//     <p>{milestone.displayProperties.description}</p>
-//   </div>
-// );
 
 export default class Character extends Component {
   static propTypes = {
@@ -25,6 +11,7 @@ export default class Character extends Component {
         PropTypes.array,
       ]),
     ).isRequired,
+    displayName: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -91,9 +78,10 @@ export default class Character extends Component {
 
   render() {
     const { milestoneList } = this.state;
+    const { displayName } = this.props;
     return (
       <div>
-        <p>Milestone Testing</p>
+        <p>{displayName}</p>
         {milestoneList
           && milestoneList.map(milestone => (
             <Milestone

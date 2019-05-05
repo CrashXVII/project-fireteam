@@ -96,6 +96,7 @@ export default class App extends Component {
       progressions,
       profileList,
       activities,
+      displayName,
     } = this.state;
     return (
       <div>
@@ -119,6 +120,7 @@ export default class App extends Component {
             progressions={progressions}
             activities={activities}
             character={character}
+            displayName={displayName}
           />
           )}
         </div>
