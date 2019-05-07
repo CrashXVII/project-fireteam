@@ -102,17 +102,17 @@ export default class App extends Component {
       <div>
         <Container>
           <ProfileSearch sendProfiles={this.sendProfiles} apiCall={this.apiCall} />
-          <button type="button" onClick={this.getManifestData}>mani</button>
           {profileList.length > 0 && (
-          <ProfileList profileList={profileList} getProfile={this.getProfile} />
+            <ProfileList profileList={profileList} getProfile={this.getProfile} />
           )}
           {charList.length > 0 && (
-          <CharacterList
-            characterList={charList}
-            getCharacter={this.getCharacter}
-          />
+            <CharacterList
+              characterList={charList}
+              getCharacter={this.getCharacter}
+            />
           )}
         </Container>
+        <button type="button" onClick={this.getManifestData}>mani</button>
         <div>
           <HashConverter />
           {progressions && (

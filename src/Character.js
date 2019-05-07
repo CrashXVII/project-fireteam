@@ -16,11 +16,14 @@ export default class Character extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      milestoneList: [],
+    };
   }
 
   componentDidMount() {
     this.getMilestoneArray();
+    this.sortProgressions();
   }
 
   int32 = (x) => {
@@ -52,6 +55,20 @@ export default class Character extends Component {
     });
   };
 
+  sortProgressions = () => {
+    const { progressions } = this.props;
+    const milestones = Object.values(progressions.milestones);
+    const activities = milestones.filter(milestone => milestone.activities);
+    const quest = milestones.filter(milestone => milestone.availableQuests);
+    // eslint-disable-next-line max-len
+    const other = milestones.filter(milestone => !milestone.activities && !milestone.availableQuests);
+    this.setState({
+      activities,
+      quest,
+      other,
+    });
+  }
+
 
   getMilestoneFromDB = async (milestone) => {
     try {
@@ -78,7 +95,7 @@ export default class Character extends Component {
 
   render() {
     const { milestoneList } = this.state;
-    const { displayName } = this.props;
+    const { displayName, progressions } = this.props;
     return (
       <div>
         <p>{displayName}</p>
@@ -87,6 +104,7 @@ export default class Character extends Component {
             <Milestone
               key={milestone.hash}
               milestone={milestone}
+              progressions={progressions}
             />
           ))}
       </div>

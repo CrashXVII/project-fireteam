@@ -15,12 +15,16 @@ export default class Milestone extends Component {
       PropTypes.number,
       PropTypes.string,
     ])).isRequired,
+    progressions: PropTypes.objectOf(PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.array,
+    ])).isRequired,
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      test: 'test',
+
     };
   }
 
