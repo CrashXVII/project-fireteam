@@ -54,6 +54,7 @@ export default class Character extends Component {
     const milestoneDefinitions = await Promise.all(
       milestoneArray.map(milestone => this.getMilestoneFromDB(milestone)),
     );
+    await milestoneDefinitions.pop();
     await this.setState({
       milestoneDefinitions,
     });

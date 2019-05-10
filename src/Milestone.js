@@ -33,8 +33,52 @@ export default class Milestone extends Component {
     };
   }
 
+  componentDidMount() {
+    this.handleLiveData();
+  }
+
+  handleLiveData = () => {
+    const { liveData } = this.props;
+    if (liveData.activities) {
+      this.handleActivities();
+    } else if (liveData.availableQuests) {
+      this.handleQuests();
+    } else {
+      throw new Error('unhandled quest');
+    }
+  }
+
+  handleQuests = () => {
+    const { liveData } = this.props;
+    /* eslint-disable prefer-destructuring */
+    const objective = liveData.availableQuests[0].status.stepObjectives[0];
+    const progress = objective.progress;
+    const completionValue = objective.completionValue;
+    /* eslint-enable prefer-destructuring */
+    this.setState({
+      progress,
+      completionValue,
+    });
+  }
+
+  handleActivities = () => {
+    const { liveData } = this.props;
+    if (liveData.activities[0].challenges.length > 0) {
+      /* eslint-disable prefer-destructuring */
+      const objective = liveData.activities[0].challenges[0].objective;
+      const progress = objective.progress;
+      const completionValue = objective.completionValue;
+      /* eslint-enable prefer-destructuring */
+      this.setState({
+        progress,
+        completionValue,
+      });
+    }
+  }
+
   render() {
     const { milestone } = this.props;
+    const { progress, completionValue } = this.state;
     return (
       <div>
         {milestone.displayProperties.hasIcon && (
@@ -47,6 +91,12 @@ export default class Milestone extends Component {
         )}
         <p>{milestone.displayProperties.name}</p>
         <p>{milestone.displayProperties.description}</p>
+        {completionValue && (
+          <p>
+            <span>{progress}</span>
+            <span>{completionValue}</span>
+          </p>
+        )}
       </div>
     );
   }
