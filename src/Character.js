@@ -17,7 +17,7 @@ export default class Character extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      milestoneList: [],
+      milestoneDefinitions: [],
     };
   }
 
@@ -47,11 +47,12 @@ export default class Character extends Component {
     const milestoneArray = Object.values(
       progressions.milestones,
     );
-    const milestoneList = await Promise.all(
+    const milestoneDefinitions = await Promise.all(
       milestoneArray.map(milestone => this.getMilestoneFromDB(milestone)),
     );
     await this.setState({
-      milestoneList,
+      milestoneDefinitions,
+      milestoneArray,
     });
   };
 
@@ -94,13 +95,13 @@ export default class Character extends Component {
   // TODO: Next up is calls to the API to check live status of Milestone progression.
 
   render() {
-    const { milestoneList } = this.state;
+    const { milestoneDefinitions } = this.state;
     const { displayName, progressions } = this.props;
     return (
       <div>
         <p>{displayName}</p>
-        {milestoneList
-          && milestoneList.map(milestone => (
+        {milestoneDefinitions
+          && milestoneDefinitions.map(milestone => (
             <Milestone
               key={milestone.hash}
               milestone={milestone}
