@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 const Img = styled.img`
   background: black;
+  height: 60px;
+  width: 60px;
 `;
 
 export default class Milestone extends Component {
@@ -15,9 +17,12 @@ export default class Milestone extends Component {
       PropTypes.number,
       PropTypes.string,
     ])).isRequired,
-    progressions: PropTypes.objectOf(PropTypes.oneOfType([
-      PropTypes.object,
+    liveData: PropTypes.objectOf(PropTypes.oneOfType([
       PropTypes.array,
+      PropTypes.bool,
+      PropTypes.object,
+      PropTypes.number,
+      PropTypes.string,
     ])).isRequired,
   }
 

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import Milestone from './Milestone';
 
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
 
 export default class Character extends Component {
   static propTypes = {
@@ -23,7 +28,6 @@ export default class Character extends Component {
 
   componentDidMount() {
     this.getMilestoneArray();
-    this.sortProgressions();
   }
 
   int32 = (x) => {
@@ -52,24 +56,8 @@ export default class Character extends Component {
     );
     await this.setState({
       milestoneDefinitions,
-      milestoneArray,
     });
   };
-
-  sortProgressions = () => {
-    const { progressions } = this.props;
-    const milestones = Object.values(progressions.milestones);
-    const activities = milestones.filter(milestone => milestone.activities);
-    const quest = milestones.filter(milestone => milestone.availableQuests);
-    // eslint-disable-next-line max-len
-    const other = milestones.filter(milestone => !milestone.activities && !milestone.availableQuests);
-    this.setState({
-      activities,
-      quest,
-      other,
-    });
-  }
-
 
   getMilestoneFromDB = async (milestone) => {
     try {
@@ -98,7 +86,7 @@ export default class Character extends Component {
     const { milestoneDefinitions } = this.state;
     const { displayName, progressions } = this.props;
     return (
-      <div>
+      <Wrapper>
         <p>{displayName}</p>
         {milestoneDefinitions
           && milestoneDefinitions.map(milestone => (
@@ -106,9 +94,10 @@ export default class Character extends Component {
               key={milestone.hash}
               milestone={milestone}
               progressions={progressions}
+              liveData={progressions.milestones[milestone.hash]}
             />
           ))}
-      </div>
+      </Wrapper>
     );
   }
 }
