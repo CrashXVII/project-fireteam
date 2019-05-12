@@ -43,8 +43,6 @@ export default class Milestone extends Component {
       this.handleActivities();
     } else if (liveData.availableQuests) {
       this.handleQuests();
-    } else {
-      throw new Error('unhandled quest');
     }
   }
 
