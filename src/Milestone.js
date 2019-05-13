@@ -32,7 +32,7 @@ const Milestone = ({ milestone }) => (
 Milestone.propTypes = {
   milestone: PropTypes.objectOf(
     PropTypes.oneOfType([
-      PropTypes.object(),
+      PropTypes.object,
       PropTypes.number,
     ]),
   ).isRequired,
