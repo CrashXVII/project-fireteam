@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import TestStone from './TestStone';
+import Milestone from './Milestone';
 
 const Wrapper = styled.div`
   display: grid;
@@ -75,9 +75,8 @@ export default class Character extends Component {
     const milestone = {};
     milestone.progress = this.getLiveProgress(liveData).progress;
     milestone.completionValue = this.getLiveProgress(liveData).completionValue;
-    milestone.definition = definition;
-    milestone.liveData = liveData;
-    console.log(milestone);
+    milestone.displayProperties = definition.displayProperties;
+    milestone.hash = liveData.milestoneHash;
     return milestone;
   }
 
@@ -109,7 +108,6 @@ export default class Character extends Component {
 
   handleActivities = (liveData) => {
     if (liveData.activities[0].challenges.length > 0) {
-      console.log(liveData);
       /* eslint-disable prefer-destructuring */
       const objective = liveData.activities[0].challenges[0].objective;
       const progress = objective.progress;
@@ -157,9 +155,9 @@ export default class Character extends Component {
         <p>{displayName}</p>
         {milestoneArray
           && milestoneArray.map(milestone => (
-            <TestStone
+            <Milestone
               milestone={milestone}
-              key={milestone.liveData.milestoneHash}
+              key={milestone.hash}
             />
           ))}
       </Wrapper>
