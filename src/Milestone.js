@@ -92,6 +92,7 @@ export default class Milestone extends Component {
         {completionValue && (
           <p>
             <span>{progress}</span>
+            <span> of </span>
             <span>{completionValue}</span>
           </p>
         )}

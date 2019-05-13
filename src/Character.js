@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Milestone from './Milestone';
+import TestStone from './TestStone';
 
 const Wrapper = styled.div`
   display: grid;
@@ -48,17 +48,83 @@ export default class Character extends Component {
 
   getMilestoneArray = async () => {
     const { progressions } = this.props;
-    const milestoneArray = Object.values(
+    const liveDataArray = Object.values(
       progressions.milestones,
     );
     const milestoneDefinitions = await Promise.all(
-      milestoneArray.map(milestone => this.getMilestoneFromDB(milestone)),
+      liveDataArray.map(milestone => this.getMilestoneFromDB(milestone)),
     );
     await this.setState({
       milestoneDefinitions,
+    });
+    await this.createMilestoneArray();
+  };
+
+  createMilestoneArray = () => {
+    const { milestoneDefinitions } = this.state;
+    const { progressions } = this.props;
+    const milestoneArray = milestoneDefinitions.map(
+      milestone => this.createMilestone(milestone, progressions.milestones[milestone.hash]),
+    );
+    this.setState({
       milestoneArray,
     });
-  };
+  }
+
+  createMilestone = (definition, liveData) => {
+    const milestone = {};
+    milestone.progress = this.getLiveProgress(liveData).progress;
+    milestone.completionValue = this.getLiveProgress(liveData).completionValue;
+    milestone.definition = definition;
+    milestone.liveData = liveData;
+    console.log(milestone);
+    return milestone;
+  }
+
+  getLiveProgress = (liveData) => {
+    if (liveData.activities) {
+      return this.handleActivities(liveData);
+    }
+
+    if (liveData.availableQuests) {
+      return this.handleQuests(liveData);
+    }
+    return {
+      progress: 0,
+      completionValue: 0,
+    };
+  }
+
+  handleQuests = (liveData) => {
+  /* eslint-disable prefer-destructuring */
+    const objective = liveData.availableQuests[0].status.stepObjectives[0];
+    const progress = objective.progress;
+    const completionValue = objective.completionValue;
+    /* eslint-enable prefer-destructuring */
+    return {
+      progress,
+      completionValue,
+    };
+  }
+
+  handleActivities = (liveData) => {
+    if (liveData.activities[0].challenges.length > 0) {
+      console.log(liveData);
+      /* eslint-disable prefer-destructuring */
+      const objective = liveData.activities[0].challenges[0].objective;
+      const progress = objective.progress;
+      const completionValue = objective.completionValue;
+      /* eslint-enable prefer-destructuring */
+      return {
+        progress,
+        completionValue,
+      };
+    }
+    return {
+      progress: 0,
+      completionValue: 0,
+    };
+  }
 
   getMilestoneFromDB = async (milestone) => {
     try {
@@ -84,18 +150,16 @@ export default class Character extends Component {
   // TODO: Next up is calls to the API to check live status of Milestone progression.
 
   render() {
-    const { milestoneDefinitions } = this.state;
-    const { displayName, progressions } = this.props;
+    const { milestoneArray } = this.state;
+    const { displayName } = this.props;
     return (
       <Wrapper>
         <p>{displayName}</p>
-        {milestoneDefinitions
-          && milestoneDefinitions.map(milestone => (
-            <Milestone
-              key={milestone.hash}
+        {milestoneArray
+          && milestoneArray.map(milestone => (
+            <TestStone
               milestone={milestone}
-              progressions={progressions}
-              liveData={progressions.milestones[milestone.hash]}
+              key={milestone.liveData.milestoneHash}
             />
           ))}
       </Wrapper>
