@@ -86,7 +86,8 @@ export default class App extends Component {
     const manifest = await this.apiCall(
       '/Platform/Destiny2/Manifest/',
     );
-    this.setState({ manifest });
+    const manifestPath = await `http://www.bungie.net${manifest.mobileWorldContentPaths.en}`;
+    this.setState({ manifestPath });
   }
 
   render() {
@@ -97,6 +98,7 @@ export default class App extends Component {
       profileList,
       activities,
       displayName,
+      manifestPath,
     } = this.state;
     return (
       <div>
@@ -112,7 +114,12 @@ export default class App extends Component {
             />
           )}
         </Container>
+        {/* SHORT CUT FOR ME, TO BE REMOVED  */}
         <button type="button" onClick={this.getManifestData}>mani</button>
+        {manifestPath && (
+          <a href={manifestPath} download="database.zip">Download Manifest</a>
+        )}
+        {/* SHORT CUT FOR ME, TO BE REMOVED  */}
         <div>
           <HashConverter />
           {progressions && (
