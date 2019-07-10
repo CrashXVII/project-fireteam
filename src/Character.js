@@ -71,14 +71,12 @@ export default class Character extends Component {
     });
   }
 
-  createMilestone = (definition, liveData) => {
-    const milestone = {};
-    milestone.progress = this.getLiveProgress(liveData).progress;
-    milestone.completionValue = this.getLiveProgress(liveData).completionValue;
-    milestone.displayProperties = definition.displayProperties;
-    milestone.hash = liveData.milestoneHash;
-    return milestone;
-  }
+  createMilestone = (definition, liveData) => ({
+    progress: this.getLiveProgress(liveData).progress,
+    completionValue: this.getLiveProgress(liveData).completionValue,
+    displayProperties: definition.displayProperties,
+    hash: liveData.milestoneHash,
+  })
 
   getLiveProgress = (liveData) => {
     if (liveData.activities) {
