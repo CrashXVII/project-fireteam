@@ -22,11 +22,15 @@ export default class Character extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: null,
       milestoneDefinitions: [],
     };
   }
 
   componentDidMount() {
+    this.setState({
+      isLoading: true,
+    });
     this.getMilestoneArray();
   }
 
@@ -67,6 +71,7 @@ export default class Character extends Component {
       milestone => this.createMilestone(milestone, progressions.milestones[milestone.hash]),
     );
     this.setState({
+      isLoading: false,
       milestoneArray,
     });
   }
@@ -76,7 +81,7 @@ export default class Character extends Component {
     completionValue: this.getLiveProgress(liveData).completionValue,
     displayProperties: definition.displayProperties,
     hash: liveData.milestoneHash,
-  })
+  });
 
   getLiveProgress = (liveData) => {
     if (liveData.activities) {
@@ -146,11 +151,12 @@ export default class Character extends Component {
   // TODO: Next up is calls to the API to check live status of Milestone progression.
 
   render() {
-    const { milestoneArray } = this.state;
+    const { milestoneArray, isLoading } = this.state;
     const { displayName } = this.props;
     return (
       <Wrapper>
         <p>{displayName}</p>
+        {isLoading ? (<h1>Loading...</h1>) : null}
         {milestoneArray
           && milestoneArray.map(milestone => (
             <Milestone
